@@ -20,10 +20,50 @@ exp1_boolean_min_tb.v	Verilog testbench
 exp1_boolean_min.vcd	VCD waveform dump generated during simulation
 
 ## Verilog Program
+```
+//gedit fun.v
+module fun (
+input wire A, 
+input wire B, 
+output wire F 
+); 
+assign F = (~A) | B ;    // F = A' + B 
+endmodule
+```
 
 
 
 ## TestBench Program
+```
+// gedit tb.v
+module tb;
+    reg A, B;
+    wire F;
+    // Instantiate the design under test (DUT)
+    fun uut (
+        .A(A),
+        .B(B),
+        .F(F)
+    );
+
+    initial begin
+        // ---- VCD dump setup ----
+        $dumpfile("fun.vcd");   // name of the VCD file to be generated
+        $dumpvars(0, tb);   // dump all signals in this testbench hierarchy
+
+        // ---- Apply all 4 input combinations ----
+        $monitor("Time=%0t A=%b B=%b | F=%b", $time, A, B, F);
+
+        A = 0; B = 0; #10;
+        A = 0; B = 1; #10;
+        A = 1; B = 0; #10;
+        A = 1; B = 1; #10;
+
+        #10 $finish;
+    end
+
+endmodule
+```
 
 
 
@@ -78,12 +118,16 @@ o	F
 The waveform should agree with the truth table.
  
 ### Expected Result
+<img width="1905" height="227" alt="Screenshot 2026-10-30 152140" src="https://github.com/user-attachments/assets/fc28fd3e-1d22-4c2d-95f7-5494a8be162b" />
+
 The Boolean function
 F(A,B,C,D)=Σm(0,2,5,7,8,10,13,15), which simplifies to F=B'D'+BD.
 was minimized to F=B'D'+BD.
 and successfully implemented using Verilog HDL.
 
 ## OUTPUT
+<img width="1920" height="1080" alt="Screenshot 2026-10-30 152248" src="https://github.com/user-attachments/assets/e0591f6d-91f9-43c8-8594-fc2f8e2dc938" />
+
 
 
 
